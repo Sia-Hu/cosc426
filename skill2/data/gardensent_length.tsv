@@ -1,0 +1,9 @@
+sentid	pairid	comparison	length	sentence
+1	1	expected	short	Because the suspect changed, the file deserved further investigation.
+2	1	unexpected	short	Because the suspect changed the file deserved further investigation.
+3	2	expected	long	Because the suspect changed, the file that was carefully guarded deserved further investigation.
+4	2	unexpected	long	Because the suspect changed the file that was carefully guarded deserved further investigation.
+5	3	expected	short	While Anna dressed, the baby spit up on the bed.
+6	3	unexpected	short	While Anna dressed the baby spit up on the bed.
+7	4	expected	long	While Anna dressed, the baby that was small and cute spit up on the bed.
+8	4	unexpected	long	While Anna dressed the baby that was small and cute spit up on the bed.

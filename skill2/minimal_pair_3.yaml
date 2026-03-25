@@ -1,0 +1,25 @@
+exp: MinimalPair
+
+mode: 
+    - evaluate
+    - analyze
+
+models:
+    hf_causal_model:
+      - gpt2
+      - utahnlp/boolq_gpt2_seed-1
+
+predfpath: ../cosc426/skill2/predictions/garden_3.tsv
+
+datafpath: ../cosc426/skill2/data/gardensent_boolq.tsv
+
+resultsfpath: ../cosc426/skill2/results/garden_3.tsv
+
+save: by_cond
+
+conditions: length
+
+pred_measure: prob
+
+punctuation: previous
+

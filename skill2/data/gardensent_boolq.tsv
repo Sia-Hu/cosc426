@@ -1,0 +1,17 @@
+sentid	pairid	comparison	length	ambiguity	sentence	ROI
+1	1	expected	short	unambiguous	Because the suspect changed, the file deserved further investigation. Did the suspect change the file? No.	15
+2	1	unexpected	short	unambiguous	Because the suspect changed, the file deserved further investigation. Did the suspect change the file? Yes.	15
+3	2	expected	short	ambiguous	Because the suspect changed the file deserved further investigation. Did the suspect change the file? No.	15
+4	2	unexpected	short	ambiguous	Because the suspect changed the file deserved further investigation. Did the suspect change the file? Yes.	15
+5	3	expected	long	unambiguous	Because the suspect changed, the file that was carefully guarded deserved further investigation. Did the suspect change the file? No.	19
+6	3	unexpected	long	unambiguous	Because the suspect changed, the file that was carefully guarded deserved further investigation. Did the suspect change the file? Yes.	19
+7	4	expected	long	ambiguous	Because the suspect changed the file that was carefully guarded deserved further investigation. Did the suspect change the file? No.	19
+8	4	unexpected	long	ambiguous	Because the suspect changed the file that was carefully guarded deserved further investigation. Did the suspect change the file? Yes.	19
+9	5	expected	short	unambiguous	While Anna dressed, the baby spit up on the bed. Did Anna dress the baby? No.	15
+10	5	unexpected	short	unambiguous	While Anna dressed, the baby spit up on the bed. Did Anna dress the baby? Yes.	15
+11	6	expected	short	ambiguous	While Anna dressed the baby spit up on the bed. Did Anna dress the baby? No.	15
+12	6	unexpected	short	ambiguous	While Anna dressed the baby spit up on the bed. Did Anna dress the baby? Yes.	15
+13	7	expected	long	unambiguous	While Anna dressed, the baby that was small and cute spit up on the bed. Did Anna dress the baby? No.	20
+14	7	unexpected	long	unambiguous	While Anna dressed, the baby that was small and cute spit up on the bed. Did Anna dress the baby? Yes.	20
+15	8	expected	long	ambiguous	While Anna dressed the baby that was small and cute spit up on the bed. Did Anna dress the baby? No.	20
+16	8	unexpected	long	ambiguous	While Anna dressed the baby that was small and cute spit up on the bed. Did Anna dress the baby? Yes.	20

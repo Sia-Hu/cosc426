@@ -1,0 +1,23 @@
+exp: MinimalPair
+
+mode: 
+    - evaluate
+    - analyze
+
+models:
+    hf_causal_model:
+      - gpt2
+
+predfpath: ../cosc426/skill2/predictions/garden_1.tsv
+
+datafpath: ../cosc426/skill2/data/gardensent_length.tsv
+
+resultsfpath: ../cosc426/skill2/results/garden_1.tsv
+
+save: by_cond
+
+conditions: length
+
+punctuation: previous
+
+

@@ -1,0 +1,22 @@
+exp: MinimalPair
+
+mode: 
+    - evaluate
+    - analyze
+
+models:
+    hf_causal_model:
+      - utahnlp/boolq_gpt2_seed-1
+
+predfpath: ../cosc426/skill2/predictions/garden_2.tsv
+
+datafpath: ../cosc426/skill2/data/gardensent_boolq.tsv
+
+resultsfpath: ../cosc426/skill2/results/garden_2.tsv
+
+save: by_cond, by_pair
+
+conditions: ambiguity
+
+punctuation: previous
+
