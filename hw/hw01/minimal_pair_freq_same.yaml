@@ -1,0 +1,21 @@
+exp: MinimalPair
+
+mode: 
+    - evaluate
+    - analyze
+
+models:
+    hf_causal_model:
+      - distilbert/distilgpt2
+
+datafpath: /Users/huxiyan/Desktop/H/25Fall/COSC426/cosc426/hw/hw01/frequency_dataset_same.tsv
+
+predfpath: /Users/huxiyan/Desktop/H/25Fall/COSC426/cosc426/hw/hw01/predictions/frequency_same.tsv
+
+resultsfpath: /Users/huxiyan/Desktop/H/25Fall/COSC426/cosc426/hw/hw01/results/frequency_same.tsv
+
+pred_measure: prob
+
+conditions: freq_bin
+
+save: by_pair, by_cond

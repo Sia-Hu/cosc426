@@ -66,8 +66,24 @@ class UnigramModel:
             Smoothed probability of unigram given the trained model. -1.0 if invalid smooth. (Valid smooth:  MLE (no smoothing), add-k where you add k to all bigram counts)
 
         """
-
-        pass
+        if unigram not in self.vocab:
+            unigram = self.unk_token
+   
+        if self.smooth == 'MLE':
+            total_count = sum(self.unigram_freqs.values())
+            word_count = self.unigram_freqs.get(unigram,0)
+            return word_count / total_count if total_count > 0 else 0.0
+        elif self.smooth.startswith('add-'):
+            try:
+                k = float(self.smooth.split('-')[1])
+            except ValueError:
+                return -1.0
+            total_count = sum(self.unigram_freqs.values())
+            vocab_size = len(self.vocab)
+            word_count = self.unigram_freqs.get(unigram,0)
+            return (word_count + k) / (total_count + k * vocab_size) if total_count > 0 else 0.0
+        else:
+            return -1.0
 
 
 
@@ -85,11 +101,21 @@ class UnigramModel:
                 prob: P(word | context)
                 surp: -log_2(word | context)
         """
-        pass
-
-
-
-
-
-    
-
+        results = []
+        testdat = self.preprocess([datafpath])
+        for sentid, sent in enumerate(testdat):
+            for wordpos, word in enumerate(sent):
+                prob = self.get_prob(word)
+                if prob > 0:
+                    surp = -math.log2(prob)
+                else:
+                    surp = float('inf')
+                results.append({'sentid': sentid, 'word': word, 'wordpos': wordpos, 'prob': prob, 'surp': surp})
+        
+        with open(predfpath, 'w', newline='') as csvfile:
+            fieldnames = ['sentid', 'word', 'wordpos', 'prob', 'surp']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter='\t')
+            writer.writeheader()
+            for row in results:
+                writer.writerow(row)
+        return

@@ -33,7 +33,12 @@ class LM_Dataset(torch.utils.data.Dataset):
         Returns a set of all the words in the vocab file + [BOS] and [EOS]. Words in the vocab should be lowercased if self.lower is True. 
 
         """
-        pass
+        with open(self.vocab_fname, 'r') as f:
+            words = [word.strip() for word in f.readlines()]
+            if self.lower:
+                words = [word.lower() for word in words]
+            words += ['[BOS]', '[EOS]']
+            return set(words)
 
     def load_text(self):
         """
@@ -41,8 +46,12 @@ class LM_Dataset(torch.utils.data.Dataset):
         Sentences should be lowercased if self.lower is True.
 
         """
-        pass
-
+        df = pd.read_csv(self.data_fname, sep='\t')
+        sentences = df['sentence'].tolist()
+        sentids = df['sentid'].tolist()
+        if self.lower:
+            sentences = [sent.lower() for sent in sentences]
+        return sentences, sentids
 
 
     def make_pairs(self):
@@ -233,7 +242,23 @@ class LM_Evaluator():
         Hint 2: Pytorch has an inbuilt softmax function that can convert logits to probabilities.   
 
         """
-        pass
+        all_words = []
+        all_probs = []
+
+        for X, y_target in self.test_loader:
+            hidden, cell = model.init_hidden(X.size(0))
+            X = X.to(self.device)
+
+            y_pred, hidden, cell = model(X, hidden, cell)
+
+            probs = torch.softmax(y_pred, dim=2)
+
+            seq_probs = self.get_word_prob(y_target[0], probs[0])
+
+            all_words.append(y_target[0].cpu().tolist())
+            all_probs.append(seq_probs.cpu().tolist())
+
+        return all_words, all_probs
 
     def save_preds(self, models, fpath):
         """
@@ -245,7 +270,32 @@ class LM_Evaluator():
             Nothing. But saves a tsv file with columns in self.cols
 
         """
-        pass
+        
+        rows = []
+
+        for model_name, model in models.items():
+            words, probs = self.get_preds(model)
+
+            for seq_idx, (seq_words, seq_probs) in enumerate(zip(words, probs)):
+                sentid = self.data.sentids[seq_idx]
+
+                for pos, (w_id, prob) in enumerate(zip(seq_words, seq_probs)):
+                    word = self.data.id_to_word[w_id]
+
+                    rows.append([
+                        seq_idx,           
+                        sentid,            
+                        word,              
+                        pos,               
+                        model_name,        
+                        "nltk",            
+                        int(not word.isalpha()),  
+                        prob,              
+                        -torch.log(torch.tensor(prob)).item()
+                    ])
+
+        df = pd.DataFrame(rows, columns=self.cols)
+        df.to_csv(fpath, sep='\t', index=False)
 
 
 

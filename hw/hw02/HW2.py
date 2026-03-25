@@ -50,10 +50,6 @@ def generate(rule, logprob, sentence, grammar):
     sentence = [x.replace("'", "") for x in sentence]
     return(' '.join(sentence), np.sum(logprob))
 
-
-
-
-
 def generate_sentences(grammar: dict, num_sents: int) -> list:
     """
     Generates num_sents, sampled probabilistically from grammar

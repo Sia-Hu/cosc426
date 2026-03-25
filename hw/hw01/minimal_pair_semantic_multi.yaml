@@ -1,0 +1,21 @@
+exp: MinimalPair
+
+mode: 
+    - evaluate
+    - analyze
+
+models:
+    hf_causal_model:
+      - distilbert/distilgpt2
+
+datafpath: /Users/huxiyan/Desktop/H/25Fall/COSC426/cosc426/hw/hw01/semantic_dataset_multiNP.tsv
+
+predfpath: /Users/huxiyan/Desktop/H/25Fall/COSC426/cosc426/hw/hw01/predictions/semantic_multiNP.tsv
+
+resultsfpath: /Users/huxiyan/Desktop/H/25Fall/COSC426/cosc426/hw/hw01/results/semantic_multiNP.tsv
+
+pred_measure: prob
+
+conditions: semantic_class_detailed
+
+save: by_pair, by_cond

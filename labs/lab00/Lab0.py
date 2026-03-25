@@ -54,135 +54,199 @@ def clean_words(words: list) -> list:
     >>> clean_words(["!!", "?%"])
     []
     """
-    pass
-
-
-# def update_frequencies(freq_dict: dict, fpath: str) -> dict:
-#     """Updates existing frequency dictionary with the words in fpath
-
-#     Params:
-#         freq_dict: dictionary of frequencies
-#         fpath: path to the file with new text
-
-#     Returns: 
-#         Modified original dictionary (makes it easy for doctest)
-
-#     >>> update_frequencies({'here': 0, 'is':0, 'a':0, 'sentence':0, 'UNK':0}, 'data/test.txt')
-#     {'here': 1, 'is': 1, 'a': 2, 'sentence': 2, 'UNK': 1}
-
-#     >>> update_frequencies({'here': 2, 'is':3, 'a':1, 'sentence':0, 'UNK':1}, 'data/test.txt')
-#     {'here': 3, 'is': 4, 'a': 3, 'sentence': 2, 'UNK': 2}
-#     """
-#     pass
-
-
-# def get_probabilities(freq_dict: dict) -> dict: 
-#     """ Converts frequencies to probabilities
-
-#     Params: 
-#         freq_dict: dictionary with frequencies
-
-#     Returns: 
-#         New dictionary where frequencies are used to compute probabilities
-
-#     >>> get_probabilities({'here': 1, 'is':1, 'a':1, 'sentence':0, 'UNK':2})
-#     {'here': 0.2, 'is': 0.2, 'a': 0.2, 'sentence': 0.0, 'UNK': 0.4}
-
-#     >>> get_probabilities({'here': 4, 'is':6, 'a':0, 'sentence':0, 'UNK':0})
-#     {'here': 0.4, 'is': 0.6, 'a': 0.0, 'sentence': 0.0, 'UNK': 0.0}
-
-#     >>> get_probabilities({'here': 0.0, 'is':0.0, 'a':0.0, 'sentence':0.0, 'UNK':10})
-#     {'here': 0.0, 'is': 0.0, 'a': 0.0, 'sentence': 0.0, 'UNK': 1.0}
-
-#     >>> get_probabilities({'here': 0, 'is': 0, 'a': 0, 'sentence': 0, 'UNK': 0})
-#     {'here': 0, 'is': 0, 'a': 0, 'sentence': 0, 'UNK': 0}
-#     """
-
-#     pass
-
-# def get_logprob_text(text:str, prob_dict:dict, eps: float) -> float:
-#     """ Returns log probability of a text given some probability dictionary
-
-#     Params: 
-#         text: text to compute the probability of
-#         prob_dict: dictionary returned by get_probabilties
-#         eps: some small value to make sure we are not taking log of 0. 
-
-#     Returns: 
-#         The sum of the log probabilities of all the words in the text given the prob_dict. 
-#         Hint: You can get log of a number x with math.log(x). Remember to add epsilon before taking the log! 
+    cleaned = []
     
-#     >>> get_logprob_text('here is a sentence!!', {'here': 0.3, 'is': 0.3, 'a': 0.3, 'sentence': 0.15, 'UNK': 0.05}, 0.0001)
-#     -5.507372119950168
-
-#     >>> get_logprob_text('here is a new sentence!!', {'here': 0.3, 'is': 0.3, 'a': 0.2, 'sentence': 0.15, 'UNK': 0.05}, 0.0001)
-#     -8.906404901698119
-
-#     >>> get_logprob_text('here is some new text!!', {'here': 0.3, 'is': 0.3, 'a': 0.2, 'sentence': 0.15, 'UNK': 0.05}, 0.0001)
-#     -11.388481865745586
-#     """
-#     pass
-
-# def classify(text: str, class_dicts:dict, eps: float) -> str: 
-#     """Classifies text based on log probability given different classes. 
-
-#     Params: 
-#         text: text to be classified
-
-#         class_dicts: nested dictionary where keys are the classes, and values are dictionaries that correspond to the probability dictionary for the class (as derived from get_probabilities)
-
-#         eps: some small value to make sure we are not taking log of 0 in get_logprob_text
-
-#     Returns:
-#         The class in class_dicts that assigns the highest log prob value to the text
+    for word in words:
+        cleaned_word = ''.join(char for char in word if char.isalnum()).lower()
+        if cleaned_word:
+            cleaned.append(cleaned_word)
+    
+    return cleaned
 
 
-#     >>> classify('here is some text!!',{'A': {'here': 0.2, 'is': 0.2, 'a': 0.2, 'sentence': 0.2, 'UNK': 0.2}, 'B': {'here': 0.2, 'is': 0.15, 'a': 0.3, 'sentence': 0.3, 'UNK': 0.05}},0.0001)
-#     'A'
+def update_frequencies(freq_dict: dict, fpath: str) -> dict:
+    """Updates existing frequency dictionary with the words in fpath
 
-#     >>> classify('a word or two',{'A': {'one': 0.4, 'word': 0.4, 'UNK': 0.2}, 'B': {'one': 0.4, 'word': 0.3, 'UNK': 0.3}, 'C': {'one': 0.1, 'word': 0.4, 'UNK': 0.5}},0.0001)
-#     'C'
-#     """
+    Params:
+        freq_dict: dictionary of frequencies
+        fpath: path to the file with new text
 
-#     best_logprob = -math.inf ##give them this line
-#     pass
+    Returns: 
+        Modified original dictionary (makes it easy for doctest)
+
+    >>> update_frequencies({'here': 0, 'is':0, 'a':0, 'sentence':0, 'UNK':0}, 'data/test.txt')
+    {'here': 1, 'is': 1, 'a': 2, 'sentence': 2, 'UNK': 1}
+
+    >>> update_frequencies({'here': 2, 'is':3, 'a':1, 'sentence':0, 'UNK':1}, 'data/test.txt')
+    {'here': 3, 'is': 4, 'a': 3, 'sentence': 2, 'UNK': 2}
+    """
+    try:
+        with open(fpath, 'r', encoding="utf-8") as f:
+            text = f.read()
+            words = text.split()
+            cleaned_words = clean_words(words)
+            for word in cleaned_words:
+                if word in freq_dict:
+                    freq_dict[word] += 1
+                else:
+                    freq_dict['UNK'] += 1
+    except FileNotFoundError:
+        print(f"File not found: {fpath}")
+    
+    return freq_dict
 
 
-# def train(train_dict: dict, freq_dict: dict):
-#     """For each class, trains a model for each class (i.e., creates a probability dictionary) given a list of files.
+def get_probabilities(freq_dict: dict) -> dict: 
+    """ Converts frequencies to probabilities
 
-#     Params:
-#         train_dict: A dictionary where keys are the labels and the values are a list of files associated with the label to train the model
+    Params: 
+        freq_dict: dictionary with frequencies
 
-#         freq_dict: A dictionary where keys are the words in vocabulary and the values are the counts of the words (which keeps getting updated over training)
+    Returns: 
+        New dictionary where frequencies are used to compute probabilities
 
-#     Returns: 
-#         Nothing. But modifies freq_dict. 
+    >>> get_probabilities({'here': 1, 'is':1, 'a':1, 'sentence':0, 'UNK':2})
+    {'here': 0.2, 'is': 0.2, 'a': 0.2, 'sentence': 0.0, 'UNK': 0.4}
 
-#     """
+    >>> get_probabilities({'here': 4, 'is':6, 'a':0, 'sentence':0, 'UNK':0})
+    {'here': 0.4, 'is': 0.6, 'a': 0.0, 'sentence': 0.0, 'UNK': 0.0}
 
-#     pass
+    >>> get_probabilities({'here': 0.0, 'is':0.0, 'a':0.0, 'sentence':0.0, 'UNK':10})
+    {'here': 0.0, 'is': 0.0, 'a': 0.0, 'sentence': 0.0, 'UNK': 1.0}
+
+    >>> get_probabilities({'here': 0, 'is': 0, 'a': 0, 'sentence': 0, 'UNK': 0})
+    {'here': 0, 'is': 0, 'a': 0, 'sentence': 0, 'UNK': 0}
+    """
+    total_count = sum(freq_dict.values())
+    if total_count == 0:
+        return {word: 0 for word in freq_dict}
+    
+    prob_dict = {word: count / total_count for word, count in freq_dict.items()}
+    return prob_dict
+
+def get_logprob_text(text:str, prob_dict:dict, eps: float) -> float:
+    """ Returns log probability of a text given some probability dictionary
+
+    Params: 
+        text: text to compute the probability of
+        prob_dict: dictionary returned by get_probabilties
+        eps: some small value to make sure we are not taking log of 0. 
+
+    Returns: 
+        The sum of the log probabilities of all the words in the text given the prob_dict. 
+        Hint: You can get log of a number x with math.log(x). Remember to add epsilon before taking the log! 
+    
+    >>> get_logprob_text('here is a sentence!!', {'here': 0.3, 'is': 0.3, 'a': 0.3, 'sentence': 0.15, 'UNK': 0.05}, 0.0001)
+    -5.507372119950168
+
+    >>> get_logprob_text('here is a new sentence!!', {'here': 0.3, 'is': 0.3, 'a': 0.2, 'sentence': 0.15, 'UNK': 0.05}, 0.0001)
+    -8.906404901698119
+
+    >>> get_logprob_text('here is some new text!!', {'here': 0.3, 'is': 0.3, 'a': 0.2, 'sentence': 0.15, 'UNK': 0.05}, 0.0001)
+    -11.388481865745586
+    """
+    words = clean_words(text.split())
+    log_prob = 0.0
+    
+    for word in words:
+        prob = prob_dict.get(word, prob_dict.get('UNK', 0)) + eps
+        log_prob += math.log(prob)
+    
+    return log_prob
+
+def classify(text: str, class_dicts:dict, eps: float) -> str: 
+    """Classifies text based on log probability given different classes. 
+
+    Params: 
+        text: text to be classified
+
+        class_dicts: nested dictionary where keys are the classes, and values are dictionaries that correspond to the probability dictionary for the class (as derived from get_probabilities)
+
+        eps: some small value to make sure we are not taking log of 0 in get_logprob_text
+
+    Returns:
+        The class in class_dicts that assigns the highest log prob value to the text
 
 
+    >>> classify('here is some text!!',{'A': {'here': 0.2, 'is': 0.2, 'a': 0.2, 'sentence': 0.2, 'UNK': 0.2}, 'B': {'here': 0.2, 'is': 0.15, 'a': 0.3, 'sentence': 0.3, 'UNK': 0.05}},0.0001)
+    'A'
 
-# def classify_texts(class_dicts:dict, fpaths: dict, outfpath: str) -> None: 
-#     """ Classifies texts for different classes. Creates a file with all the sentences and predictions.   
+    >>> classify('a word or two',{'A': {'one': 0.4, 'word': 0.4, 'UNK': 0.2}, 'B': {'one': 0.4, 'word': 0.3, 'UNK': 0.3}, 'C': {'one': 0.1, 'word': 0.4, 'UNK': 0.5}},0.0001)
+    'C'
+    """
 
-#     Params: 
-#         class_dicts: A dictionary where keys are the words in vocabulary and the values are the probability of the word given the label
+    best_logprob = -math.inf ##give them this line
+    best_class = None
+    for class_label, prob_dict in class_dicts.items():
+        log_prob = get_logprob_text(text, prob_dict, eps)
+        if log_prob > best_logprob:
+            best_logprob = log_prob
+            best_class = class_label
+    return best_class
 
-#         fpaths: A dictionary where keys are the labels and the values are a list of files associated with the label to evaluate the model on
 
-#         outfpath: A filepath to save all the predictions to
-#     """
+def train(train_dict: dict, freq_dict: dict):
+    """For each class, trains a model for each class (i.e., creates a probability dictionary) given a list of files.
+
+    Params:
+        train_dict: A dictionary where keys are the labels and the values are a list of files associated with the label to train the model
+
+        freq_dict: A dictionary where keys are the words in vocabulary and the values are the counts of the words (which keeps getting updated over training)
+
+    Returns: 
+        Nothing. But modifies freq_dict. 
+
+    """
+    for class_label, file_list in train_dict.items():
+        for file_path in file_list:
+            update_frequencies(freq_dict[class_label], file_path)
+
+
+def classify_texts(class_dicts:dict, fpaths: dict, outfpath: str) -> None: 
+    """ Classifies texts for different classes. Creates a file with all the sentences and predictions.   
+
+    Params: 
+        class_dicts: A dictionary where keys are the words in vocabulary and the values are the probability of the word given the label
+
+        fpaths: A dictionary where keys are the labels and the values are a list of files associated with the label to evaluate the model on
+
+        outfpath: A filepath to save all the predictions to
+    """
 
     
-#     eps = 0.0001
-#     headers = ["text", "gold", "predicted", "correct"]
-#     output = ["\t".join(headers)]
-
-#     pass
-
+    eps = 0.0001
+    headers = ["text", "gold", "predicted", "correct"]
+    output = ["\t".join(headers)]
+    
+    for gold_label, file_list in fpaths.items():
+        for file_path in file_list:
+            try:
+                with open(file_path, 'r', encoding='utf-8') as file:
+                    content = file.read().strip()
+            
+                lines = content.split('\n')
+                
+                for line in lines:
+                    line = line.strip()
+                    if line: 
+                        predicted_label = classify(line, class_dicts, eps)
+                        
+                        correct = "1" if predicted_label == gold_label else "0"
+                        
+                        text_clean = line.replace('\t', ' ')
+                        row = [text_clean, gold_label, predicted_label, correct]
+                        output.append("\t".join(row))
+                        
+            except FileNotFoundError:
+                print(f"Error: File '{file_path}' not found.")
+            except Exception as e:
+                print(f"Error processing file '{file_path}': {e}")
+    
+    try:
+        with open(outfpath, 'w', encoding='utf-8') as outfile:
+            outfile.write('\n'.join(output))
+    except Exception as e:
+        print(f"Error writing to output file '{outfpath}': {e}")
 
 
 
@@ -212,6 +276,15 @@ def main():
     outfpath_toy = 'predictions_toy.txt'
 
     ## Implement the rest of the main function
+    train(train_dict, freq_dict)
+    
+    prob_dict = {
+        'swift': get_probabilities(freq_dict['swift']),
+        'shakespeare': get_probabilities(freq_dict['shakespeare'])
+    }
+    
+    classify_texts(prob_dict, test, outfpath)
+    classify_texts(prob_dict, test_toy, outfpath_toy)
     pass
 
 

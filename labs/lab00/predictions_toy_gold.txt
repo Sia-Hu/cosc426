@@ -1,4 +1,4 @@
-text 	 gold 	 predicted 	 correct
+text	gold	predicted	correct
 God save the most judgmental creeps 	 swift 	 shakespeare 	 0
 Who say they want what's best for me 	 swift 	 swift 	 1
 Sanctimoniously performing soliloquies I'll never see 	 swift 	 swift 	 1

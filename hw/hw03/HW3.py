@@ -1,4 +1,5 @@
 import nltk
+import math
 from transformers import AutoTokenizer
 
 def get_ngrams(text:list, n):
@@ -78,6 +79,43 @@ def get_hf_vocab(modelname):
     """
     tokenizer = AutoTokenizer.from_pretrained(modelname)
     return tokenizer.vocab
+
+def get_ngram_prob(ngram: tuple, smooth: str, ngram_freqs: dict, n_minus1_freqs: dict, vocab_size: int):
+    
+    if smooth == 'MLE':
+        count_ngram = ngram_freqs.get(ngram, 0)
+        n_minus1 = ngram[:-1]
+        count_n_minus1 = n_minus1_freqs.get(n_minus1, 0)
+        if count_n_minus1 == 0:
+            return 0.0
+        else:
+            return count_ngram / count_n_minus1
+    elif smooth.startswith('add-'):
+        try:
+            k = float(smooth.split('-')[1])
+        except ValueError:
+            return -1.0
+        count_ngram = ngram_freqs.get(ngram, 0)
+        n_minus1 = ngram[:-1]
+        count_n_minus1 = n_minus1_freqs.get(n_minus1, 0)
+        return (count_ngram + k) / (count_n_minus1 + k * vocab_size)
+    else:
+        return -1.0
+
+def evaluate(text: list, smooth: str, n: int, ngram_freqs: dict, n_minus1_freqs: dict, vocab_size: int, ):
+
+    log_prob_sum = 0.0
+    ngrams = get_ngrams(text, n)
+    for ngram in ngrams:
+        prob = get_ngram_prob(ngram, smooth, ngram_freqs, n_minus1_freqs, vocab_size)
+        if prob > 0:
+            log_prob_sum += math.log(prob)
+        else:
+            log_prob_sum += math.log(1e-10)  
+            
+    avg_log_prob = log_prob_sum / len(ngrams)
+    perplexity = math.exp(-avg_log_prob)
+    return perplexity
 
 
 def tests():
